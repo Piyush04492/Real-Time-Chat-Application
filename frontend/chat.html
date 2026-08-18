@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ChatSphere - Dashboard</title>
+    <!-- Google Fonts: Inter -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <!-- FontAwesome for icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body class="chat-body">
+    <!-- Glowing background elements -->
+    <div class="glow-bg">
+        <div class="circle circle-1"></div>
+        <div class="circle circle-2"></div>
+    </div>
+
+    <div class="chat-container glass">
+        <!-- Sidebar Navigation -->
+        <aside class="sidebar">
+            <!-- Sidebar Header -->
+            <div class="sidebar-header">
+                <div class="logo">
+                    <i class="fa-solid fa-comments-lightning logo-icon"></i>
+                    <span>ChatSphere</span>
+                </div>
+                <button id="logout-btn" title="Log Out" class="icon-btn">
+                    <i class="fa-solid fa-arrow-right-from-bracket"></i>
+                </button>
+            </div>
+
+            <!-- Current User Profile Drawer -->
+            <div class="profile-card">
+                <div class="avatar" id="my-avatar">U</div>
+                <div class="profile-info">
+                    <span class="profile-name" id="my-username">Username</span>
+                    <span class="status-badge"><span class="status-dot online"></span> Online</span>
+                </div>
+            </div>
+
+            <!-- Message Search -->
+            <div class="search-box">
+                <i class="fa-solid fa-magnifying-glass search-icon"></i>
+                <input type="text" id="msg-search-input" placeholder="Search message history...">
+                <button id="clear-search-btn" class="clear-btn"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+
+            <!-- Sections Container -->
+            <div class="sidebar-scrollable">
+                <!-- Group Rooms Section -->
+                <div class="sidebar-section">
+                    <div class="section-header">
+                        <h3>Rooms</h3>
+                        <button id="open-create-room-modal" title="Create Room" class="add-btn">
+                            <i class="fa-solid fa-plus"></i>
+                        </button>
+                    </div>
+                    <ul class="item-list" id="rooms-list">
+                        <!-- Rooms injected dynamically -->
+                        <div class="list-loader"><i class="fa-solid fa-spinner fa-spin"></i> Loading rooms...</div>
+                    </ul>
+                </div>
+
+                <!-- Direct Messages (Users) Section -->
+                <div class="sidebar-section">
+                    <div class="section-header">
+                        <h3>Direct Messages</h3>
+                    </div>
+                    <ul class="item-list" id="users-list">
+                        <!-- Users injected dynamically -->
+                        <div class="list-loader"><i class="fa-solid fa-spinner fa-spin"></i> Loading users...</div>
+                    </ul>
+                </div>
+            </div>
+        </aside>
+
+        <!-- Main Chat Area -->
+        <main class="chat-main">
+            <!-- Chat Window Header -->
+            <header class="chat-header">
+                <div class="chat-header-info">
+                    <div class="avatar header-avatar" id="active-chat-avatar">#</div>
+                    <div>
+                        <h2 id="active-chat-title">Select a chat</h2>
+                        <p id="active-chat-description">Join a room or pick a user to start messaging.</p>
+                    </div>
+                </div>
+                <!-- Search Result Indicator -->
+                <div class="search-indicator" id="search-indicator" style="display: none;">
+                    <span><i class="fa-solid fa-filter"></i> Showing Search Results</span>
+                    <button id="close-search-indicator-btn" class="text-btn">Clear</button>
+                </div>
+            </header>
+
+            <!-- Message Scroll Area -->
+            <div class="messages-area" id="messages-container">
+                <!-- Fallback Intro Screen -->
+                <div class="welcome-screen" id="welcome-screen">
+                    <i class="fa-solid fa-comments welcome-icon"></i>
+                    <h2>Welcome to ChatSphere!</h2>
+                    <p>Select an existing public room from the sidebar, create a new one, or click on any registered user to initiate a private direct message.</p>
+                </div>
+                
+                <!-- Messages injected dynamically -->
+            </div>
+
+            <!-- Typing indicator -->
+            <div class="typing-indicator" id="typing-indicator-bar" style="display: none;">
+                <div class="typing-bubble">
+                    <span class="typing-dots">
+                        <span></span>
+                        <span></span>
+                        <span></span>
+                    </span>
+                    <span id="typing-text">someone is typing...</span>
+                </div>
+            </div>
+
+            <!-- Chat Input Footer -->
+            <footer class="chat-footer">
+                <form id="message-form" class="message-input-form">
+                    <input type="text" id="message-input" placeholder="Type a message..." autocomplete="off" disabled>
+                    <button type="submit" id="send-btn" class="send-btn" disabled>
+                        <i class="fa-solid fa-paper-plane"></i>
+                    </button>
+                </form>
+            </footer>
+        </main>
+    </div>
+
+    <!-- Create Room Modal Overlay -->
+    <div class="modal-overlay" id="create-room-modal" style="display: none;">
+        <div class="modal glass">
+            <div class="modal-header">
+                <h3>Create New Room</h3>
+                <button id="close-room-modal" class="close-btn"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+            <form id="create-room-form">
+                <div class="input-group">
+                    <label for="new-room-name">Room Name</label>
+                    <input type="text" id="new-room-name" placeholder="e.g. general-tech" required minlength="3" maxlength="25">
+                </div>
+                <div class="input-group">
+                    <label for="new-room-desc">Description (Optional)</label>
+                    <input type="text" id="new-room-desc" placeholder="What is this room about?" maxlength="150">
+                </div>
+                <button type="submit" class="submit-btn">Create Room</button>
+                <div class="auth-message error" id="create-room-error"></div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Main JavaScript Logic -->
+    <script src="chat.js"></script>
+</body>
+</html>

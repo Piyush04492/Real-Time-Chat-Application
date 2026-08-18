@@ -1,0 +1,54 @@
+version: "3.8"
+
+services:
+  web:
+    build: .
+    container_name: chat_backend
+    ports:
+      - "8000:8000"
+    volumes:
+      - .:/app
+    environment:
+      # Instruct backend to use the MySQL container db instead of SQLite
+      - DATABASE_URL=mysql+pymysql://root:rootpassword@db:3306/chat_db
+      - SECRET_KEY=supersecretjwtkeyforrealtimechatapplication12345
+      - ALGORITHM=HS256
+      - ACCESS_TOKEN_EXPIRE_MINUTES=1440
+      # Redis URL inside docker network
+      - REDIS_URL=redis://redis:6379/0
+    depends_on:
+      db:
+        condition: service_healthy
+      redis:
+        condition: service_started
+
+  db:
+    image: mysql:8.0
+    container_name: chat_mysql_db
+    restart: always
+    environment:
+      MYSQL_DATABASE: chat_db
+      MYSQL_ROOT_PASSWORD: rootpassword
+    ports:
+      - "3306:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+    # Health check ensures FastAPI server waits until MySQL database is fully online
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "root", "-pRootpassword"]
+      timeout: 10s
+      retries: 5
+      start_period: 30s
+
+  redis:
+    image: redis:alpine
+    container_name: chat_redis_cache
+    restart: always
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+
+volumes:
+  mysql_data:
+  redis_data:
