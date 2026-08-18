@@ -1,5 +1,7 @@
 # Progressively Scalable Real-Time Chat Application
 
+🚀 **[Live Demo Link](https://real-time-chat-application-kx00.onrender.com)**
+
 A high-performance, progressive Real-Time Chat Application built using **FastAPI**, **WebSockets**, **SQLAlchemy (SQLite/MySQL)**, and **JWT Authentication** on the backend, paired with a stunning glassmorphic vanilla JavaScript/CSS frontend.
 
 This repository is structured progressively to demonstrate advanced backend engineering concepts—ranging from basic WebSockets up to database pooling, authentication, search, and containerization.
