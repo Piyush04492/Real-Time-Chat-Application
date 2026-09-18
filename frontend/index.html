@@ -123,7 +123,12 @@
                     body: JSON.stringify({ username, password })
                 });
 
-                const data = await response.json();
+                let data;
+                try {
+                    data = await response.json();
+                } catch (e) {
+                    throw new Error(`Server returned HTTP ${response.status}: ${response.statusText}`);
+                }
 
                 if (!response.ok) {
                     throw new Error(data.detail || 'Login failed.');
@@ -164,7 +169,12 @@
                     body: JSON.stringify({ username, password })
                 });
 
-                const data = await response.json();
+                let data;
+                try {
+                    data = await response.json();
+                } catch (e) {
+                    throw new Error(`Server returned HTTP ${response.status}: ${response.statusText}`);
+                }
 
                 if (!response.ok) {
                     throw new Error(data.detail || 'Registration failed.');

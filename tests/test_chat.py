@@ -43,8 +43,12 @@ def setup_and_teardown_database():
     
     # Tear down tables and delete file
     Base.metadata.drop_all(bind=engine)
+    engine.dispose()
     if os.path.exists("./test_chat.db"):
-        os.remove("./test_chat.db")
+        try:
+            os.remove("./test_chat.db")
+        except PermissionError:
+            pass
 
 # --- AUTHENTICATION TESTS ---
 
